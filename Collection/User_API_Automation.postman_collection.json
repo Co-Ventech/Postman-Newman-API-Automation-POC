@@ -1,0 +1,535 @@
+{
+  "info": {
+    "_postman_id": "aceaec15-f4b4-41ed-92a8-c2cee0852d65",
+    "name": "User API Automation POC",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "51047118",
+    "_collection_link": "https://go.postman.co/collection/51047118-aceaec15-f4b4-41ed-92a8-c2cee0852d65?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Positive Tests",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "{{user_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Verify create user status code\", function(){\r",
+                  "\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Verify created user name\", function(){\r",
+                  "\r",
+                  "    var response = pm.response.json();\r",
+                  "\r",
+                  "    pm.expect(response.name)\r",
+                  "       .to.eql(\"Alex Hales\");\r",
+                  "\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Verify response contains id\", function(){\r",
+                  "\r",
+                  "    var response = pm.response.json();\r",
+                  "\r",
+                  "    pm.expect(response.id).to.exist;\r",
+                  "\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\":\"Alex Hales\",\r\n    \"username\":\"alex_hales_19\",\r\n    \"email\":\"alexhales@test.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Response Time Validation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response time should be less than 2 seconds\", function(){\r",
+                  "\r",
+                  "    pm.expect(pm.response.responseTime)\r",
+                  "      .to.be.below(2000);\r",
+                  "\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Negative Tests",
+      "item": [
+        {
+          "name": "Get User - Invalid ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Verify status code is 404 for invalid user\", function () {\r",
+                  "\r",
+                  "    pm.response.to.have.status(404);\r",
+                  "\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Verify response body is empty\", function () {\r",
+                  "\r",
+                  "    var response = pm.response.json();\r",
+                  "\r",
+                  "    pm.expect(Object.keys(response).length)\r",
+                  "       .to.eql(0);\r",
+                  "\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "20"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Invalid Endpoint Validation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Verify invalid endpoint returns 404\", function () {\r",
+                  "\r",
+                  "    pm.response.to.have.status(404);\r",
+                  "\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Invalid User ID format",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Verify invalid user id format handling\", function(){\r",
+                  "\r",
+                  "    pm.expect(pm.response.code)\r",
+                  "      .to.be.oneOf([400,404]);\r",
+                  "\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/abc",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "abc"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Data Validation Tests",
+      "item": [
+        {
+          "name": "Get Single User - Validate Details",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Verify status code is 200\", function () {\r",
+                  "\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Verify user id matches requested user id\", function () {\r",
+                  "\r",
+                  "    var response = pm.response.json();\r",
+                  "\r",
+                  "    var expectedUserId = Number(pm.environment.get(\"user_id\"));\r",
+                  "\r",
+                  "    pm.expect(response.id)\r",
+                  "        .to.eql(expectedUserId);\r",
+                  "\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Verify mandatory fields exist\", function () {\r",
+                  "\r",
+                  "    var response = pm.response.json();\r",
+                  "\r",
+                  "    pm.expect(response.name).to.exist;\r",
+                  "\r",
+                  "    pm.expect(response.username).to.exist;\r",
+                  "\r",
+                  "    pm.expect(response.email).to.exist;\r",
+                  "\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "{{user_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Validate Data Type Formats",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Validate data types format\", function(){\r",
+                  "\r",
+                  "    var response = pm.response.json();\r",
+                  "\r",
+                  "\r",
+                  "    pm.expect(response.id)\r",
+                  "      .to.be.a(\"number\");\r",
+                  "\r",
+                  "\r",
+                  "    pm.expect(response.name)\r",
+                  "      .to.be.a(\"string\");\r",
+                  "\r",
+                  "\r",
+                  "    pm.expect(response.email)\r",
+                  "      .to.be.a(\"string\");\r",
+                  "\r",
+                  "\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "{{user_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Validate Email Format",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Validate email format\", function(){\r",
+                  "\r",
+                  "    var response = pm.response.json();\r",
+                  "\r",
+                  "    var email = response.email;\r",
+                  "\r",
+                  "\r",
+                  "    pm.expect(email)\r",
+                  "      .to.match(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/);\r",
+                  "\r",
+                  "\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "{{user_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Validate User ID Consistency",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Verify requested user id matches response id\", function(){\r",
+                  "\r",
+                  "    var response = pm.response.json();\r",
+                  "\r",
+                  "    var expectedId =\r",
+                  "    Number(pm.environment.get(\"user_id\"));\r",
+                  "\r",
+                  "\r",
+                  "    pm.expect(response.id)\r",
+                  "      .to.eql(expectedId);\r",
+                  "\r",
+                  "\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "{{user_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "JSON Schema Validation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var schema = {\r",
+                  "\r",
+                  "\"type\":\"object\",\r",
+                  "\r",
+                  "\"properties\":{\r",
+                  "\r",
+                  "\"id\":{\r",
+                  "\"type\":\"number\"\r",
+                  "},\r",
+                  "\r",
+                  "\"name\":{\r",
+                  "\"type\":\"string\"\r",
+                  "},\r",
+                  "\r",
+                  "\"username\":{\r",
+                  "\"type\":\"string\"\r",
+                  "},\r",
+                  "\r",
+                  "\"email\":{\r",
+                  "\"type\":\"string\"\r",
+                  "}\r",
+                  "\r",
+                  "},\r",
+                  "\r",
+                  "\"required\":[\r",
+                  "\"id\",\r",
+                  "\"name\",\r",
+                  "\"username\",\r",
+                  "\"email\"\r",
+                  "]\r",
+                  "\r",
+                  "};\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Validate response schema\", function(){\r",
+                  "\r",
+                  "    pm.response.to.have.jsonSchema(schema);\r",
+                  "\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "{{user_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
